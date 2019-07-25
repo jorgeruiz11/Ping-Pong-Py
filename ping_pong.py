@@ -142,7 +142,14 @@ while game:
         ball.dy *=-1
 
 
-    # Ahora definiremos el movimiento de la pelota al chocar con un jugador.
-    if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < player_b.ycor() + 40 and ball.ycor() < player_b.ycor() -40):
+    ''' Ahora definiremos el movimiento de la pelota al chocar con un jugador. '''
+
+    # Choque con jugador B.
+    if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < player_b.ycor() + 40 and ball.ycor() > player_b.ycor() -40):
         ball.setx(340)
+        ball.dx *=-1
+
+    # Choque con jugador A.
+    if (ball.xcor() < -340 and ball.xcor() < -350) and (ball.ycor() < player_a.ycor() + 40 and ball.ycor() > player_a.ycor() -40):
+        ball.setx(-340)
         ball.dx *=-1
