@@ -20,12 +20,17 @@ window.setup(width = 800, height = 600)
 window.tracer(0)
 
 
+# Marcador
+score_a = 0
+score_b = 0
+
+
 # Jugador A
 player_a = turtle.Turtle()
 player_a.speed(0)
 # Aquí definimos que forma va a ser el jugador A.
 # shape define la figura mientras que shapesize define el tamaño.
-player_a.shapesize(stretch_wid = 5, stretch_len = .5)
+player_a.shapesize(stretch_wid = 5, stretch_len = 1)
 player_a.shape('square')
 player_a.color('white')
 # nos permite mover al jugador sin dibujar lineas de recorrido.
@@ -40,7 +45,7 @@ player_b = turtle.Turtle()
 player_b.speed(0)
 # Aquí definimos que forma va a ser el jugador A.
 # shape define la figura mientras que shapesize define el tamaño.
-player_b.shapesize(stretch_wid = 5, stretch_len = .5)
+player_b.shapesize(stretch_wid = 5, stretch_len = 1)
 player_b.shape('square')
 player_b.color('white')
 # nos permite mover al jugador sin dibujar lineas de recorrido.
@@ -50,7 +55,7 @@ player_b.penup()
 player_b.goto(350, 0)
 
 
-# Ball
+# Pelota
 ball = turtle.Turtle()
 ball.speed(0)
 # Aquí definimos que forma va a ser el jugador A.
@@ -64,8 +69,19 @@ ball.penup()
 # en este caso está en el centro.
 ball.goto(0, 0)
 # Movimiento de la pelota en direcciones y velocidad de movimiento.
-ball.dx = .03
-ball.dy = -.03
+ball.dx = .07
+ball.dy = -.07
+
+
+# Apuntador
+pen = turtle.Turtle()
+pen.speed(0)
+pen.color("yellow")
+pen.penup()
+pen.hideturtle()
+pen.goto(0, 260)
+# Poner aquí el nombre de los jugadores.
+pen.write("Player A: 0    Player B: 0", align = "center", font = ("Courier", 15, "normal"))
 
 
 '''
@@ -82,7 +98,7 @@ def player_a_down():
     move_down -= 20
     player_a.sety(move_down)
 
-    # Jugador B.
+# Jugador B.
 def player_b_up():
     move_up = player_b.ycor()
     move_up += 20
@@ -108,7 +124,10 @@ window.onkeypress(player_b_down, "Down")
 # Ciclo para mantener la pantalla del juego todo el tiempo.
 game = True
 while game:
-    window.update()
+    try:
+        window.update()
+    except:
+        pass
 
     # Movimiento de la pelota.
     ball.setx(ball.xcor() + ball.dx)
@@ -119,27 +138,45 @@ while game:
     # Como la ultura es de 600, entonces nos iremos a la mitad arriba y mitad abajo
     # y como la anchura es de 800 igual nos iremos a la mitad izq. y mitad der.
 
-    # Cuando va para arriba.
+    # Aquí hacemos que los jugadores no puedan desaparecer del mapa (salirse del cuadro).
+    if player_a.ycor() > 260:
+        player_a.sety(260)
+    elif player_a.ycor() < -260:
+        player_a.sety(-260)
+    elif player_b.ycor() > 260:
+        player_b.sety(260)
+    elif player_b.ycor() < -260:
+        player_b.sety(-260)
+
+
+    # Cuando la bola va para arriba.
     if ball.ycor() > 290:
         # Damos la posición.
         ball.sety(290)
         # Hacemos que se dirija al lado contrario, en este caso que baje.
         ball.dy *=-1
 
-    # Cuando va para abajo.
+    # Cuando la bola va para abajo.
     if ball.ycor() < -290:
         ball.sety(-290)
         ball.dy *= -1
 
-    # Cuando va para la derecha.
+    # Cuando la bola va para la derecha.
     if ball.xcor() > 390:
         ball.goto(0, 0)
         ball.dy *=-1
+        score_a += 1
+        pen.clear()
+        pen.write("Player A: {}    Player B: {}".format(score_a, score_b), align = "center", font = ("Courier", 15, "normal"))
 
-    # Cuando va para la izquierda.
+    # Cuando la bola va para la izquierda.
     if ball.xcor() < -390:
         ball.goto(0, 0)
         ball.dy *=-1
+        score_b += 1
+        pen.clear()
+        pen.write("Player A: {}    Player B: {}".format(score_a, score_b), align = "center", font = ("Courier", 15, "normal"))
+
 
 
     ''' Ahora definiremos el movimiento de la pelota al chocar con un jugador. '''
